@@ -32,7 +32,7 @@ A **Machine Learning** web application built with **Streamlit** that predicts th
 | `app.py`    | Streamlit app source code        |
 | `pipe.pkl`  | Trained ML pipeline model        |
 | `df.pkl`    | Cleaned dataset used for features|
-|'laptop.ipynb| Jupyter file                      |
+|'laptop.ipynb'| Jupyter file                      |
 
 ---
 

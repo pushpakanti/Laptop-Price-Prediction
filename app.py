@@ -2,10 +2,8 @@ import streamlit as st
 import pickle
 import numpy as np
 
-
-#importing model
-pipe= pickle.load(open('pipe.pkl','rb'))
-df= pickle.load(open('df.pkl', 'rb'))
+pipe = pickle.load(open('pipe.pkl','rb'))
+df = pickle.load(open('df.pkl','rb'))
 
 st.title("Laptop Price Predictor")
 
@@ -54,29 +52,33 @@ if st.button('Predict Price'):
     hd_display = 1 if hd_display == 'Yes' else 0
     ips = 1 if ips == 'Yes' else 0
 
-    # Calculate PPI
+    # Calculate PPI safely
     X_res = int(resolution.split('x')[0])
     Y_res = int(resolution.split('x')[1])
-    ppi = ((X_res**2) + (Y_res**2))**0.5 / screen_size
+    
+    if screen_size == 0:
+        st.error("⚠️ Screen size cannot be zero. Please enter a valid screen size.")
+    else:
+        ppi = ((X_res**2) + (Y_res**2))**0.5 / screen_size
 
-    # Create DataFrame for input
-    import pandas as pd
-    query = pd.DataFrame([{
-    'Company': company,
-    'TypeName': type,
-    'Ram': ram,  # Not 'RAM'
-    'Weight': weight,
-    'Touchscreen': touchscreen,
-    'HD Display': hd_display,
-    'Ips': ips,  # Not 'IPS'
-    'ppi': ppi,  # Not 'PPI'
-    'Cpu brand': cpu,
-    'HDD': hdd,
-    'SSD': ssd,
-    'Gpu brand': gpu,
-    'os': os
-}])
+        # Create DataFrame for input
+        import pandas as pd
+        query = pd.DataFrame([{
+            'Company': company,
+            'TypeName': type,
+            'Ram': ram,
+            'Weight': weight,
+            'Touchscreen': touchscreen,
+            'HD Display': hd_display,
+            'Ips': ips,
+            'ppi': ppi,
+            'Cpu brand': cpu,
+            'HDD': hdd,
+            'SSD': ssd,
+            'Gpu brand': gpu,
+            'os': os
+        }])
 
-    # Predict using the pipeline
-    predicted_price = np.exp(pipe.predict(query)[0])
-    st.title("💰 The predicted price is ₹ " + str(int(predicted_price)))
+        # Predict using the pipeline
+        predicted_price = np.exp(pipe.predict(query)[0])
+        st.title("💰 The predicted price is ₹ " + str(int(predicted_price)))
